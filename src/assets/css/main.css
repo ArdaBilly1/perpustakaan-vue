@@ -1,0 +1,38 @@
+#app{
+    font-family: 'Montserrat', sans-serif;
+}
+.router-link-exact-active{
+    font-weight: bold;
+}
+.card-product{
+    border-radius: 15px;
+}
+.card-image-top{
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+.btn{
+    border-radius: 25px;
+}
+.breadcrumb{
+    background-color: transparent;
+    padding: 0%;
+}
+.breadcrumb-item.active{
+    font-weight: bold;
+}
+.btn-primary{
+    background-color: #6c63ff;
+}
+.btn-success{
+    background-color: #8c8cfc;
+}
+.badge-success{
+    background-color: #8c8cfc;
+}
+.navbar{
+    background-color: #a9a9f8;
+}
+.img{
+    border-radius: 15px;
+}
