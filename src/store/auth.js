@@ -1,5 +1,15 @@
 import axios from "axios"
-import { resolve } from "core-js/fn/promise"
+// import { setHeaderToken, removeHeaderToken } from '../'
+
+// import { resolve } from "core-js/fn/promise"
+
+export function setHeaderToken(token) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
+}
+
+export function removeHeaderToken() {
+    delete axios.defaults.headers.common['Authorization']
+}
 
 export default {
     state: {
@@ -17,45 +27,49 @@ export default {
         }
     },
     getters: {
-        isLoggedIn (state) {
+        isLoggedIn(state) {
             return state.isLoggedIn
         },
-        user (state) {
+        user(state) {
             return state.user
         }
     },
     actions: {
-        login({dispatch, commit }, data) {
+        login({
+            dispatch,
+            commit
+        }, data) {
             return new Promise((resolve, reject) => {
-                axios.post('/login', data)
-                .then (response => {
-                    const token = response.data.token
-                    localStorage.setItem('token', token)
-                    setHeaderToken(token)
-                    dispatch('get_user')
-                    resolve(response)
-                })
-                .catch(err => {
-                    commit('reset_user')
-                    localStorage.removeItem('token')
-                    reject(err)
-                })
+                axios.post('api/login', data)
+                    .then(response => {
+                        const token = response.data.access_token
+                        localStorage.setItem('token', token)
+                        setHeaderToken(token)
+                        dispatch('get_user')
+                        resolve(response)
+                    })
+                    .catch(err => {
+                        commit('reset_user')
+                        localStorage.removeItem('token')
+                        reject(err)
+                    })
             })
         },
-        async get_user({commit}) {
-            if(!localStorage.getItem('token')){
+        async get_user({
+            commit
+        }) {
+            if (!localStorage.getItem('token')) {
                 return
             }
-            try{
-                let response = await axios.get('user')
-                    commit ('set_user',response.data.data)
-            }   catch (error) {
-                    commit ('reset_user')
-                    removeHeaderToken()
-                    localStorage.removeItem()
-                    return error
+            try {
+                let response = await axios.get('api/user')
+                commit('set_user', response.data.data)
+            } catch (error) {
+                commit('reset_user')
+                removeHeaderToken()
+                localStorage.removeItem('token')
+                return error
             }
-            
         }
     }
 }

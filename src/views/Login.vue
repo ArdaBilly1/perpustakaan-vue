@@ -1,75 +1,67 @@
 <template>
-  <div class="container">
-    <div class="row mt-5">
-      <div class="col-sm-6">
-        <img src="../assets/images/logo_login.png" width="100%" />
-      </div>
-      <div class="col-sm-6">
-        <div class="card card-primary border-primary">
-          <form
-            class="form-signin"
-            @submit.prevent="login({ name, password })"
+  <div class="row justify-content-md-center">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header"> <strong>Login</strong></div>
+        <div class="card-body">
+          <div
+            class="alert alert-danger"
+            v-for="(error, index) in errors"
+            :key="index"
           >
-            <div class="card-header">
-              <h1><strong>Login</strong></h1>
+            {{ error[0] }}
+          </div>
+          <form @submit.prevent="userLogin">
+            <div class="form-group">
+              <label for="name">Username</label>
+              <input
+                v-model="form.name"
+                type="text"
+                class="form-control"
+                placeholder="Username.."
+                required
+              />
             </div>
-            <div class="card-body">
-              <div class="form-group">
-                <label for="inputEmail" class="sr-only">Username</label>
-                <input
-                  type="text"
-                  id="inputEmail"
-                  class="form-control"
-                  placeholder="Username"
-                  required
-                  autofocus
-                />
-              </div>
-              <div class="form-group">
-                <label for="inputPassword" class="sr-only">Password</label>
-                <input
-                  type="password"
-                  id="inputPassword"
-                  class="form-control"
-                  placeholder="Password"
-                  required
-                  autofocus
-                />
-              </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                v-model="form.password"
+                type="password"
+                class="form-control"
+                placeholder="Password.."
+                required
+              />
             </div>
-            <div class="card-footer text-center">
-              <button class="btn btn-primary" type="submit">
-                Sign in
-              </button> <br>
-              <a href="#"><small>dont have account? Please Sign-up</small></a>
-              <div v-if="isError" class="alert alert-danger">
-                <strong>Danger!</strong> {{ messages }}
-              </div>
-            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
           </form>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 export default {
-  data(){
-    return{
-    name:"",
-    password:""
-    }
+  data() {
+    return {
+      form: {
+        name: "",
+        password: "",
+      },
+      errors: null,
+    };
   },
-
-  methods:{
-    login(){
-      
-    }
-  }
-
+  methods: {
+    userLogin() {
+      this.$store
+        .dispatch("login", this.form)
+        .then((response) => {
+          console.log(response);
+          // this.$router.push({ name: "Home" });
+        })
+        .catch((error) => {
+          this.errors = error.response.data.errors;
+        });
+    },
+  },
 };
 </script>
-
-<style>
-</style>
